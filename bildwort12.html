@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russisch Vokabeltraining: ДЛЯ + Genitiv</title>
+    <style>
+        :root {
+            /* Farbschema: Grüntöne */
+            --primary-dark: #2e7d32;   /* Dunkelgrün */
+            --primary-light: #66bb6a;  /* Mittelgrün */
+            --bg-color: #f1f8e9;       /* Sehr helles Grün */
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --btn-hover: #c8e6c9;
+            --correct: #4caf50;        /* Erfolgsgrün */
+            --wrong: #ef5350;          /* Fehlerrot */
+            
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --radius: 12px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            padding-bottom: 100px; /* Platz für fixierte Leiste */
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        h1 { margin: 0; font-size: 1.8rem; }
+        p.subtitle { margin-top: 5px; opacity: 0.9; }
+
+        /* GRID LAYOUT */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* CARD DESIGN */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border-top: 5px solid var(--primary-light);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .emoji {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        .de-word {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        /* BUTTONS IN CARD */
+        .btn-group {
+            display: flex;
+            gap: 5px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .choice-btn {
+            flex: 1;
+            padding: 8px 0;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            color: #555;
+        }
+
+        .choice-btn:hover {
+            background-color: var(--btn-hover);
+            border-color: var(--primary-light);
+        }
+
+        /* States for selection */
+        .choice-btn.selected {
+            background-color: var(--primary-dark);
+            color: white;
+            border-color: var(--primary-dark);
+        }
+
+        /* Feedback States */
+        .choice-btn.state-correct {
+            background-color: var(--correct) !important;
+            color: white !important;
+            border-color: var(--correct) !important;
+        }
+
+        .choice-btn.state-wrong {
+            background-color: var(--wrong) !important;
+            color: white !important;
+            border-color: var(--wrong) !important;
+            opacity: 0.4;
+        }
+
+        /* SOLUTION TEXT */
+        .solution-box {
+            margin-top: 10px;
+            padding: 8px;
+            background-color: #e8f5e9;
+            border-radius: 6px;
+            width: 100%;
+            font-size: 0.95rem;
+            display: none; /* Hidden by default */
+            border: 1px solid var(--primary-light);
+        }
+
+        .solution-box .ru-nom { color: #555; font-size: 0.85em; }
+        .solution-box .ru-gen { color: var(--primary-dark); font-weight: bold; font-size: 1.1em; }
+
+        /* GLOBAL CONTROLS (Sticky Footer) */
+        .controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            padding: 15px;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .ctrl-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.1s;
+        }
+
+        .ctrl-btn:active { transform: scale(0.95); }
+
+        .btn-check { background-color: var(--primary-dark); color: white; }
+        .btn-reset { background-color: #757575; color: white; }
+        .btn-solve { background-color: #0288d1; color: white; }
+
+        @media (max-width: 600px) {
+            .grid-container { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .card { padding: 10px; }
+            .emoji { font-size: 3rem; }
+            .btn-group { flex-direction: column; }
+            .controls { flex-direction: column; padding: 10px; }
+            .ctrl-btn { width: 100%; border-radius: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Bild-Wort-Matching</h1>
+        <p class="subtitle">Thema: <strong>ДЛЯ</strong> + Genitiv. Bestimmen Sie das Genus, um die Endung zu finden!</p>
+    </header>
+
+    <!-- Das Raster wird durch JavaScript gefüllt -->
+    <div id="grid" class="grid-container"></div>
+</div>
+
+<!-- Globale Steuerung -->
+<div class="controls">
+    <button class="ctrl-btn btn-check" onclick="checkAll()">Überprüfen</button>
+    <button class="ctrl-btn btn-reset" onclick="resetAll()">Zurücksetzen</button>
+    <button class="ctrl-btn btn-solve" onclick="showSolution()">Lösung anzeigen</button>
+</div>
+
+<script>
+    // --- DATEN ---
+    // gen: 'm' (Maskulin), 'f' (Feminin), 'n' (Neutrum)
+    const vocabData = [
+        { emoji: '🏠', de: 'Das Haus', ru_nom: 'дом', ru_gen: 'для до́ма', gen: 'm' },
+        { emoji: '🏫', de: 'Die Schule', ru_nom: 'школа', ru_gen: 'для шко́лы', gen: 'f' },
+        { emoji: '🍎', de: 'Der Apfel', ru_nom: 'яблоко', ru_gen: 'для я́блока', gen: 'n' },
+        { emoji: '🚗', de: 'Das Auto', ru_nom: 'машина', ru_gen: 'для маши́ны', gen: 'f' },
+        { emoji: '🚌', de: 'Der Bus', ru_nom: 'автобус', ru_gen: 'для авто́буса', gen: 'm' },
+        { emoji: '🥛', de: 'Die Milch', ru_nom: 'молоко', ru_gen: 'для молока́', gen: 'n' },
+        { emoji: '🐶', de: 'Der Hund', ru_nom: 'собака', ru_gen: 'для соба́ки', gen: 'f' },
+        { emoji: '🎫', de: 'Das Ticket', ru_nom: 'билет', ru_gen: 'для биле́та', gen: 'm' },
+        { emoji: '☀️', de: 'Die Sonne', ru_nom: 'солнце', ru_gen: 'для со́лнца', gen: 'n' },
+        { emoji: '🖊️', de: 'Der Stift', ru_nom: 'ручка', ru_gen: 'для ру́чки', gen: 'f' },
+        { emoji: '🐱', de: 'Der Kater', ru_nom: 'кот', ru_gen: 'для кота́', gen: 'm' },
+        { emoji: '🚲', de: 'Das Fahrrad', ru_nom: 'велосипед', ru_gen: 'для велосипе́да', gen: 'm' }
+    ];
+
+    // Status-Speicher
+    let userSelections = new Array(vocabData.length).fill(null);
+
+    // --- RENDERING ---
+    const grid = document.getElementById('grid');
+
+    function renderCards() {
+        grid.innerHTML = '';
+        vocabData.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="emoji">${item.emoji}</div>
+                <div class="de-word">${item.de}</div>
+                <div class="btn-group" id="group-${index}">
+                    <button class="choice-btn" onclick="selectOption(${index}, 'm')">Mask.</button>
+                    <button class="choice-btn" onclick="selectOption(${index}, 'f')">Fem.</button>
+                    <button class="choice-btn" onclick="selectOption(${index}, 'n')">Neut.</button>
+                </div>
+                <div class="solution-box" id="sol-${index}">
+                    <div class="ru-nom">${item.ru_nom} (${item.gen})</div>
+                    <div class="ru-gen">${item.ru_gen}</div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // --- LOGIC ---
+
+    function selectOption(index, choice) {
+        // Speichern
+        userSelections[index] = choice;
+
+        // UI Update (Nur Selected State, kein Feedback)
+        const group = document.getElementById(`group-${index}`);
+        const buttons = group.querySelectorAll('.choice-btn');
+        
+        buttons.forEach(btn => {
+            btn.classList.remove('selected', 'state-correct', 'state-wrong'); // Reset colors
+            // Prüfen ob dieser Button der geklickte ist (anhand des onclick attributs oder Text)
+            // Einfacher: Wir schauen, welcher Typ 'choice' entspricht
+            if (btn.innerText.startsWith(choice === 'm' ? 'Mask' : choice === 'f' ? 'Fem' : 'Neut')) {
+                btn.classList.add('selected');
+            }
+        });
+
+        // Lösung verstecken bei neuer Auswahl
+        document.getElementById(`sol-${index}`).style.display = 'none';
+    }
+
+    function checkAll() {
+        vocabData.forEach((item, index) => {
+            const userChoice = userSelections[index];
+            const group = document.getElementById(`group-${index}`);
+            const buttons = group.querySelectorAll('.choice-btn');
+
+            if (!userChoice) return; // Nichts ausgewählt
+
+            buttons.forEach(btn => {
+                // Bestimmen welcher Button das ist
+                let btnType = '';
+                if (btn.innerText.includes('Mask')) btnType = 'm';
+                if (btn.innerText.includes('Fem')) btnType = 'f';
+                if (btn.innerText.includes('Neut')) btnType = 'n';
+
+                // Wenn es der ausgewählte Button ist
+                if (btnType === userChoice) {
+                    if (userChoice === item.gen) {
+                        btn.classList.add('state-correct');
+                    } else {
+                        btn.classList.add('state-wrong');
+                    }
+                }
+            });
+        });
+    }
+
+    function resetAll() {
+        userSelections.fill(null);
+        const buttons = document.querySelectorAll('.choice-btn');
+        buttons.forEach(btn => {
+            btn.classList.remove('selected', 'state-correct', 'state-wrong');
+        });
+        const solutions = document.querySelectorAll('.solution-box');
+        solutions.forEach(box => box.style.display = 'none');
+    }
+
+    function showSolution() {
+        // Zuerst resetten, damit es sauber aussieht
+        resetAll();
+
+        vocabData.forEach((item, index) => {
+            const group = document.getElementById(`group-${index}`);
+            const buttons = group.querySelectorAll('.choice-btn');
+
+            // Richtigen Button markieren
+            buttons.forEach(btn => {
+                let btnType = '';
+                if (btn.innerText.includes('Mask')) btnType = 'm';
+                if (btn.innerText.includes('Fem')) btnType = 'f';
+                if (btn.innerText.includes('Neut')) btnType = 'n';
+
+                if (btnType === item.gen) {
+                    btn.classList.add('state-correct');
+                }
+            });
+
+            // Text anzeigen
+            const box = document.getElementById(`sol-${index}`);
+            box.style.display = 'block';
+        });
+    }
+
+    // Initial Start
+    renderCards();
+
+</script>
+
+</body>
+</html>
