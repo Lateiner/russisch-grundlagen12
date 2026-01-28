@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russisch Übung: Präposition ДЛЯ - Das Kuckucksei</title>
+    <style>
+        :root {
+            --primary-dark: #1b5e20; /* Dunkelgrün für Überschriften/Buttons */
+            --primary-light: #4caf50; /* Standard Grün */
+            --bg-light: #e8f5e9;      /* Sehr helles Grün für Hintergründe */
+            --white: #ffffff;
+            --error: #d32f2f;         /* Rot für Fehler */
+            --success: #2e7d32;       /* Dunkles Grün für Erfolg */
+            --text-main: #333333;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f9f4;
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border-top: 10px solid var(--primary-dark);
+        }
+
+        header {
+            background-color: var(--bg-light);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #c8e6c9;
+        }
+
+        h1 {
+            color: var(--primary-dark);
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            color: #555;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        .instructions {
+            padding: 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        .intro-text {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        /* --- Aufgaben-Reihen --- */
+        .exercise-row {
+            padding: 25px 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .exercise-row:last-child {
+            border-bottom: none;
+        }
+
+        .row-header {
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .option-card {
+            background-color: var(--white);
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            padding: 15px 10px;
+            text-align: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+            color: #444;
+        }
+
+        .option-card:hover {
+            border-color: var(--primary-light);
+            background-color: var(--bg-light);
+            transform: translateY(-2px);
+        }
+
+        .option-card.selected {
+            border-color: var(--primary-dark);
+            background-color: #c8e6c9; /* Helles Grün */
+            font-weight: bold;
+            color: var(--primary-dark);
+            box-shadow: 0 0 0 1px var(--primary-dark);
+        }
+
+        /* Status Farben für Feedback */
+        .option-card.correct-mark {
+            background-color: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .option-card.wrong-mark {
+            background-color: var(--error);
+            color: white;
+            border-color: var(--error);
+            opacity: 0.7;
+        }
+
+        /* --- Steuerungsbuttons --- */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
+            flex: 1;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .btn-check {
+            background-color: var(--primary-dark);
+            color: white;
+        }
+
+        .btn-reset {
+            background-color: #757575; /* Grau */
+            color: white;
+        }
+
+        .btn-solve {
+            background-color: #0277bd; /* Blau */
+            color: white;
+        }
+
+        /* --- Feedback Bereich --- */
+        .feedback-box {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            display: none; /* Standardmäßig ausgeblendet */
+            font-size: 0.95rem;
+        }
+
+        .feedback-success {
+            background-color: #dcedc8;
+            color: var(--primary-dark);
+            border-left: 4px solid var(--success);
+            display: block;
+        }
+
+        .feedback-error {
+            background-color: #ffcdd2;
+            color: #b71c1c;
+            border-left: 4px solid var(--error);
+            display: block;
+        }
+
+        /* --- Responsives Design --- */
+        @media (max-width: 600px) {
+            .options-grid {
+                grid-template-columns: 1fr 1fr; /* 2x2 auf Handy */
+            }
+            .controls {
+                flex-direction: column;
+            }
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Das Kuckucksei</h1>
+        <div class="subtitle">Russische Grammatik: Die Präposition <strong>ДЛЯ</strong></div>
+    </header>
+
+    <div class="instructions">
+        <div class="intro-text">
+            <strong>Regel:</strong> Nach der Präposition <strong>для</strong> (für) steht im Russischen immer der <strong>Genitiv</strong>.
+        </div>
+        <p><strong>Aufgabe:</strong> In jeder Reihe stehen vier Wörter. Drei davon stehen im richtigen Fall (Genitiv) und passen zu "для". <strong>Ein Wort passt nicht</strong> (anderer Fall oder falsche Form). Finden Sie das "Kuckucksei"!</p>
+    </div>
+
+    <!-- Reihe 1: Maskulina/Neutra Grundformen -->
+    <div class="exercise-row" id="row-1">
+        <span class="row-header">1. Nomen (Maskulin & Neutrum)</span>
+        <div class="options-grid">
+            <div class="option-card" onclick="selectOption(1, this)" data-correct="false">супа</div>
+            <div class="option-card" onclick="selectOption(1, this)" data-correct="true">окно</div>
+            <div class="option-card" onclick="selectOption(1, this)" data-correct="false">брата</div>
+            <div class="option-card" onclick="selectOption(1, this)" data-correct="false">стола</div>
+        </div>
+        <div class="feedback-box" id="feedback-1"></div>
+        <div class="controls">
+            <button class="btn-check" onclick="checkRow(1, '<strong>Окно</strong> ist das Kuckucksei. Es steht im Nominativ. Nach <em>для</em> brauchen wir den Genitiv: <em>для окна</em>.')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetRow(1)">Zurücksetzen</button>
+            <button class="btn-solve" onclick="showSolution(1, '<strong>Окно</strong> ist das Kuckucksei. Es steht im Nominativ. Nach <em>для</em> brauchen wir den Genitiv: <em>для окна</em>.')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Reihe 2: Feminina Grundformen -->
+    <div class="exercise-row" id="row-2">
+        <span class="row-header">2. Nomen (Feminin)</span>
+        <div class="options-grid">
+            <div class="option-card" onclick="selectOption(2, this)" data-correct="false">мамы</div>
+            <div class="option-card" onclick="selectOption(2, this)" data-correct="false">школы</div>
+            <div class="option-card" onclick="selectOption(2, this)" data-correct="true">собака</div>
+            <div class="option-card" onclick="selectOption(2, this)" data-correct="false">сестры</div>
+        </div>
+        <div class="feedback-box" id="feedback-2"></div>
+        <div class="controls">
+            <button class="btn-check" onclick="checkRow(2, '<strong>Собака</strong> ist das Kuckucksei. Die Endung -а ist Nominativ. Im Genitiv (nach <em>для</em>) muss es <em>для собаки</em> heißen.')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetRow(2)">Zurücksetzen</button>
+            <button class="btn-solve" onclick="showSolution(2, '<strong>Собака</strong> ist das Kuckucksei. Die Endung -а ist Nominativ. Im Genitiv (nach <em>для</em>) muss es <em>для собаки</em> heißen.')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Reihe 3: Personalpronomen -->
+    <div class="exercise-row" id="row-3">
+        <span class="row-header">3. Personalpronomen</span>
+        <div class="options-grid">
+            <div class="option-card" onclick="selectOption(3, this)" data-correct="false">меня</div>
+            <div class="option-card" onclick="selectOption(3, this)" data-correct="false">тебя</div>
+            <div class="option-card" onclick="selectOption(3, this)" data-correct="true">вы</div>
+            <div class="option-card" onclick="selectOption(3, this)" data-correct="false">нас</div>
+        </div>
+        <div class="feedback-box" id="feedback-3"></div>
+        <div class="controls">
+            <button class="btn-check" onclick="checkRow(3, '<strong>Вы</strong> ist das Kuckucksei. Das ist die Nominativ-Form. Richtig für <em>для</em> wäre: <em>для вас</em>.')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetRow(3)">Zurücksetzen</button>
+            <button class="btn-solve" onclick="showSolution(3, '<strong>Вы</strong> ist das Kuckucksei. Das ist die Nominativ-Form. Richtig für <em>для</em> wäre: <em>для вас</em>.')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Reihe 4: Weiche Zeichen / i-Deklination -->
+    <div class="exercise-row" id="row-4">
+        <span class="row-header">4. Nomen auf -ь (Weichzeichen)</span>
+        <div class="options-grid">
+            <div class="option-card" onclick="selectOption(4, this)" data-correct="false">ночи</div>
+            <div class="option-card" onclick="selectOption(4, this)" data-correct="true">тетрадь</div>
+            <div class="option-card" onclick="selectOption(4, this)" data-correct="false">двери</div>
+            <div class="option-card" onclick="selectOption(4, this)" data-correct="false">площади</div>
+        </div>
+        <div class="feedback-box" id="feedback-4"></div>
+        <div class="controls">
+            <button class="btn-check" onclick="checkRow(4, '<strong>Тетрадь</strong> ist das Kuckucksei (Nominativ). Feminine Nomen auf -ь haben im Genitiv die Endung -и: <em>для тетради</em>.')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetRow(4)">Zurücksetzen</button>
+            <button class="btn-solve" onclick="showSolution(4, '<strong>Тетрадь</strong> ist das Kuckucksei (Nominativ). Feminine Nomen auf -ь haben im Genitiv die Endung -и: <em>для тетради</em>.')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Reihe 5: Possessivpronomen -->
+    <div class="exercise-row" id="row-5">
+        <span class="row-header">5. Possessivpronomen</span>
+        <div class="options-grid">
+            <div class="option-card" onclick="selectOption(5, this)" data-correct="false">моего</div>
+            <div class="option-card" onclick="selectOption(5, this)" data-correct="true">наш</div>
+            <div class="option-card" onclick="selectOption(5, this)" data-correct="false">твоего</div>
+            <div class="option-card" onclick="selectOption(5, this)" data-correct="false">вашего</div>
+        </div>
+        <div class="feedback-box" id="feedback-5"></div>
+        <div class="controls">
+            <button class="btn-check" onclick="checkRow(5, '<strong>Наш</strong> passt nicht. Das ist Nominativ. Auch das Pronomen muss im Genitiv stehen: <em>для нашего...</em>')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetRow(5)">Zurücksetzen</button>
+            <button class="btn-solve" onclick="showSolution(5, '<strong>Наш</strong> passt nicht. Das ist Nominativ. Auch das Pronomen muss im Genitiv stehen: <em>для нашего...</em>')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Reihe 6: Adjektive -->
+    <div class="exercise-row" id="row-6">
+        <span class="row-header">6. Adjektive</span>
+        <div class="options-grid">
+            <div class="option-card" onclick="selectOption(6, this)" data-correct="false">русского</div>
+            <div class="option-card" onclick="selectOption(6, this)" data-correct="false">большого</div>
+            <div class="option-card" onclick="selectOption(6, this)" data-correct="false">хорошего</div>
+            <div class="option-card" onclick="selectOption(6, this)" data-correct="true">новый</div>
+        </div>
+        <div class="feedback-box" id="feedback-6"></div>
+        <div class="controls">
+            <button class="btn-check" onclick="checkRow(6, '<strong>Новый</strong> ist das Kuckucksei (Nominativ). Adjektive erhalten nach <em>для</em> die Endung -ого/-его: <em>для нового</em>.')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetRow(6)">Zurücksetzen</button>
+            <button class="btn-solve" onclick="showSolution(6, '<strong>Новый</strong> ist das Kuckucksei (Nominativ). Adjektive erhalten nach <em>для</em> die Endung -ого/-его: <em>для нового</em>.')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Funktion zum Auswählen einer Option
+    function selectOption(rowNum, element) {
+        // Erst alle im aktuellen Row zurücksetzen
+        const row = document.getElementById('row-' + rowNum);
+        const options = row.querySelectorAll('.option-card');
+        
+        // Wenn die Zeile schon "gelöst" ist (Feedback angezeigt), Auswahl sperren? 
+        // Optional. Hier lassen wir Änderungen zu, solange nicht neu geprüft wird.
+        
+        options.forEach(opt => opt.classList.remove('selected'));
+        
+        // Gewähltes Element markieren
+        element.classList.add('selected');
+        
+        // Feedback ausblenden, wenn der User eine neue Wahl trifft
+        const feedback = document.getElementById('feedback-' + rowNum);
+        feedback.className = 'feedback-box'; 
+        feedback.innerHTML = '';
+        
+        // Farben von vorheriger Prüfung entfernen
+        options.forEach(opt => {
+            opt.classList.remove('correct-mark');
+            opt.classList.remove('wrong-mark');
+        });
+    }
+
+    // Funktion zum Überprüfen
+    function checkRow(rowNum, explanationText) {
+        const row = document.getElementById('row-' + rowNum);
+        const selected = row.querySelector('.option-card.selected');
+        const feedback = document.getElementById('feedback-' + rowNum);
+
+        if (!selected) {
+            feedback.innerHTML = "Bitte wählen Sie zuerst ein Wort aus.";
+            feedback.className = 'feedback-box feedback-error';
+            return;
+        }
+
+        const isCorrect = selected.getAttribute('data-correct') === 'true';
+
+        if (isCorrect) {
+            // Richtig
+            selected.classList.add('correct-mark');
+            feedback.innerHTML = "<strong>Richtig!</strong> " + explanationText;
+            feedback.className = 'feedback-box feedback-success';
+        } else {
+            // Falsch
+            selected.classList.add('wrong-mark');
+            feedback.innerHTML = "<strong>Leider falsch.</strong> Dieses Wort steht korrekt im Genitiv und passt zu 'для'. Suchen Sie das Wort, das im falschen Fall steht.";
+            feedback.className = 'feedback-box feedback-error';
+        }
+    }
+
+    // Funktion zum Zurücksetzen
+    function resetRow(rowNum) {
+        const row = document.getElementById('row-' + rowNum);
+        const options = row.querySelectorAll('.option-card');
+        const feedback = document.getElementById('feedback-' + rowNum);
+
+        options.forEach(opt => {
+            opt.classList.remove('selected', 'correct-mark', 'wrong-mark');
+        });
+
+        feedback.className = 'feedback-box';
+        feedback.innerHTML = '';
+    }
+
+    // Funktion: Lösung anzeigen
+    function showSolution(rowNum, explanationText) {
+        const row = document.getElementById('row-' + rowNum);
+        const options = row.querySelectorAll('.option-card');
+        const feedback = document.getElementById('feedback-' + rowNum);
+
+        // Reset erst visuell
+        options.forEach(opt => {
+            opt.classList.remove('selected', 'correct-mark', 'wrong-mark');
+        });
+
+        // Richtige Antwort finden und markieren
+        options.forEach(opt => {
+            if (opt.getAttribute('data-correct') === 'true') {
+                opt.classList.add('correct-mark');
+            }
+        });
+
+        // Erklärung anzeigen
+        feedback.innerHTML = "<strong>Lösung:</strong> " + explanationText;
+        feedback.className = 'feedback-box feedback-success';
+    }
+</script>
+
+</body>
+</html>
