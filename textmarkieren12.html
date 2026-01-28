@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russisch Übung: Text-Markierung ДЛЯ</title>
+    <style>
+        :root {
+            /* Design-Farben (Grünthema) */
+            --theme-dark: #1b5e20;
+            --theme-medium: #4caf50;
+            --theme-light: #e8f5e9;
+            --text-color: #333;
+            
+            /* Markierungsfarben */
+            --color-1: #2196f3; /* Blau: Die Präposition */
+            --color-2: #f44336; /* Rot: Für wen? (Belebt) */
+            --color-3: #4caf50; /* Grün: Wofür? (Unbelebt) */
+            
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f8e9; /* Sehr helles Grün */
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            padding-bottom: 50px;
+        }
+
+        header {
+            background-color: var(--theme-dark);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 { margin: 0; font-size: 1.8rem; }
+        header p { margin-top: 5px; opacity: 0.9; }
+
+        /* --- STICKY TOOLBAR --- */
+        .toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: white;
+            border-bottom: 2px solid #ddd;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            flex-wrap: wrap;
+        }
+
+        .pen-btn {
+            border: 2px solid transparent;
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: #f5f5f5;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .pen-btn::before {
+            content: '';
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+
+        /* Stift-Stile */
+        .pen-1::before { background-color: var(--color-1); }
+        .pen-2::before { background-color: var(--color-2); }
+        .pen-3::before { background-color: var(--color-3); }
+
+        /* Active State für Stifte */
+        .pen-btn.active {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .pen-btn.active.pen-1 { border-color: var(--color-1); background-color: #e3f2fd; color: var(--color-1); }
+        .pen-btn.active.pen-2 { border-color: var(--color-2); background-color: #ffebee; color: var(--color-2); }
+        .pen-btn.active.pen-3 { border-color: var(--color-3); background-color: #e8f5e9; color: var(--theme-dark); }
+
+        /* --- TEXT BEREICH --- */
+        .text-area {
+            padding: 40px 20px;
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Anklickbare Wörter */
+        .word {
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 4px;
+            border: 2px solid transparent;
+            transition: background-color 0.2s, border-color 0.2s;
+            display: inline-block; /* Verhindert Umbrüche mitten im Highlight */
+        }
+
+        .word:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Markierte Wörter */
+        .word[data-marked="cat1"] { background-color: var(--color-1); color: white; }
+        .word[data-marked="cat2"] { background-color: var(--color-2); color: white; }
+        .word[data-marked="cat3"] { background-color: var(--color-3); color: white; }
+
+        /* Fehler-Anzeige */
+        .word.error {
+            border-color: red;
+            animation: shake 0.4s;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* --- CONTROLS --- */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            border-top: 1px solid #eee;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .ctrl-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: opacity 0.2s;
+        }
+
+        .ctrl-btn:hover { opacity: 0.9; }
+        
+        .btn-check { background-color: var(--theme-dark); color: white; }
+        .btn-reset { background-color: #757575; color: white; }
+        .btn-solve { background-color: #0277bd; color: white; }
+
+        .feedback-box {
+            text-align: center;
+            font-weight: bold;
+            min-height: 1.5em;
+            margin-bottom: 10px;
+            color: var(--theme-dark);
+        }
+
+        /* --- INFO BOX --- */
+        .info-section {
+            background-color: var(--theme-light);
+            margin: 20px;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            border-left: 5px solid var(--theme-medium);
+        }
+
+        .vocab-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            font-size: 0.95rem;
+        }
+
+        .vocab-item {
+            border-bottom: 1px dotted #ccc;
+            padding-bottom: 5px;
+        }
+
+        @media (max-width: 600px) {
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .controls { flex-direction: column; }
+            .text-area { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Text-Markierung</h1>
+        <p>Thema: Die Präposition <strong>ДЛЯ</strong> + Genitiv</p>
+    </header>
+
+    <!-- Sticky Toolbar -->
+    <div class="toolbar">
+        <button class="pen-btn pen-1 active" onclick="selectTool('cat1')">
+            Die Präposition "для"
+        </button>
+        <button class="pen-btn pen-2" onclick="selectTool('cat2')">
+            Für wen? (Belebt)
+        </button>
+        <button class="pen-btn pen-3" onclick="selectTool('cat3')">
+            Wofür? (Unbelebt)
+        </button>
+    </div>
+
+    <!-- Text Bereich -->
+    <div class="text-area" id="text-content">
+        <p>
+            Привет! Сегодня у нас праздник. 
+            Это подарки <span class="word" data-sol="cat1">для</span> <span class="word" data-sol="cat2">семьи</span>. 
+            Вот красивые цветы <span class="word" data-sol="cat1">для</span> <span class="word" data-sol="cat2">мамы</span>. 
+            А это новая игра <span class="word" data-sol="cat1">для</span> <span class="word" data-sol="cat2">брата</span>. 
+            Мы также купили вкусный корм <span class="word" data-sol="cat1">для</span> <span class="word" data-sol="cat2">кота</span>. 
+            Кот очень рад!
+        </p>
+        <p>
+            Теперь посмотрим вещи <span class="word" data-sol="cat1">для</span> <span class="word" data-sol="cat3">дома</span>. 
+            На столе стоит большая ваза <span class="word" data-sol="cat1">для</span> <span class="word" data-sol="cat3">фруктов</span>. 
+            В холодильнике есть вода <span class="word" data-sol="cat1">для</span> <span class="word" data-sol="cat3">супа</span>. 
+            У нас есть гараж <span class="word" data-sol="cat1">для</span> <span class="word" data-sol="cat3">машины</span>. 
+            Этот старый учебник <span class="word" data-sol="cat1">для</span> <span class="word" data-sol="cat2">студента</span>. 
+            А эта маленькая ручка <span class="word" data-sol="cat1">для</span> <span class="word" data-sol="cat2">меня</span>.
+        </p>
+    </div>
+
+    <!-- Feedback Area -->
+    <div class="feedback-box" id="feedback"></div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button class="ctrl-btn btn-check" onclick="checkAnswers()">Überprüfen</button>
+        <button class="ctrl-btn btn-reset" onclick="resetExercise()">Zurücksetzen</button>
+        <button class="ctrl-btn btn-solve" onclick="showSolution()">Lösung anzeigen</button>
+    </div>
+
+    <!-- Info / Vokabeln -->
+    <div class="info-section">
+        <h3>Grammatik & Vokabeln</h3>
+        <p>Nach der Präposition <strong>для</strong> (für) steht immer der <strong>Genitiv</strong>.</p>
+        <div class="vocab-list">
+            <div class="vocab-item"><strong>семья</strong> (Familie) → для семьи</div>
+            <div class="vocab-item"><strong>мама</strong> (Mama) → для мамы</div>
+            <div class="vocab-item"><strong>брат</strong> (Bruder) → для брата</div>
+            <div class="vocab-item"><strong>кот</strong> (Kater) → для кота</div>
+            <div class="vocab-item"><strong>дом</strong> (Haus) → для дома</div>
+            <div class="vocab-item"><strong>фрукты</strong> (Obst/Früchte) → для фруктов</div>
+            <div class="vocab-item"><strong>суп</strong> (Suppe) → для супа</div>
+            <div class="vocab-item"><strong>машина</strong> (Auto) → для машины</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Status Variablen
+    let currentTool = 'cat1'; // Standardmäßig Kategorie 1 ausgewählt
+    
+    // Initialisierung
+    document.addEventListener('DOMContentLoaded', () => {
+        // Event Listener für alle Wörter hinzufügen
+        const words = document.querySelectorAll('.word');
+        words.forEach(word => {
+            word.addEventListener('click', () => markWord(word));
+        });
+    });
+
+    // Werkzeug (Stift) auswählen
+    function selectTool(category) {
+        currentTool = category;
+        
+        // Buttons visuell aktualisieren
+        document.querySelectorAll('.pen-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Den richtigen Button finden (etwas vereinfacht über Klasse)
+        const mapping = {
+            'cat1': '.pen-1',
+            'cat2': '.pen-2',
+            'cat3': '.pen-3'
+        };
+        document.querySelector(mapping[category]).classList.add('active');
+    }
+
+    // Wort markieren
+    function markWord(element) {
+        // Wenn das Wort bereits mit der aktuellen Farbe markiert ist, Markierung entfernen
+        if (element.getAttribute('data-marked') === currentTool) {
+            element.removeAttribute('data-marked');
+        } else {
+            // Sonst neue Farbe setzen
+            element.setAttribute('data-marked', currentTool);
+        }
+        
+        // Fehler-Status entfernen, falls vorhanden (User korrigiert gerade)
+        element.classList.remove('error');
+        document.getElementById('feedback').innerText = "";
+    }
+
+    // Überprüfen
+    function checkAnswers() {
+        const words = document.querySelectorAll('.word');
+        let errorCount = 0;
+        let correctCount = 0;
+        let missingCount = 0;
+
+        words.forEach(word => {
+            const userMark = word.getAttribute('data-marked');
+            const solution = word.getAttribute('data-sol');
+
+            word.classList.remove('error'); // Reset visual error
+
+            if (userMark) {
+                if (userMark === solution) {
+                    correctCount++;
+                } else {
+                    errorCount++;
+                    word.classList.add('error'); // Falschen markieren
+                }
+            } else {
+                // Nicht markiert, aber hätte sein sollen?
+                missingCount++;
+            }
+        });
+
+        const feedback = document.getElementById('feedback');
+        
+        if (errorCount === 0 && missingCount === 0) {
+            feedback.style.color = "var(--theme-dark)";
+            feedback.innerText = "Fantastisch! Alles richtig markiert!";
+        } else if (errorCount > 0) {
+            feedback.style.color = "#d32f2f";
+            feedback.innerText = `${errorCount} Fehler gefunden (rot markiert). Versuchen Sie es noch einmal!`;
+        } else {
+            feedback.style.color = "#f57c00";
+            feedback.innerText = "Das sieht gut aus, aber es fehlen noch Markierungen.";
+        }
+    }
+
+    // Zurücksetzen
+    function resetExercise() {
+        const words = document.querySelectorAll('.word');
+        words.forEach(word => {
+            word.removeAttribute('data-marked');
+            word.classList.remove('error');
+        });
+        document.getElementById('feedback').innerText = "";
+    }
+
+    // Lösung anzeigen
+    function showSolution() {
+        const words = document.querySelectorAll('.word');
+        words.forEach(word => {
+            const solution = word.getAttribute('data-sol');
+            word.setAttribute('data-marked', solution);
+            word.classList.remove('error');
+        });
+        document.getElementById('feedback').style.color = "var(--theme-dark)";
+        document.getElementById('feedback').innerText = "Hier ist die Lösung.";
+    }
+</script>
+
+</body>
+</html>
