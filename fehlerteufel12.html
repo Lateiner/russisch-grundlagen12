@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russisch Grammatik: Der Fehlerteufel (Präposition ДЛЯ)</title>
+    <style>
+        :root {
+            /* Farbpalette: Grüntöne */
+            --primary-dark: #1b5e20;
+            --primary-medium: #2e7d32;
+            --primary-light: #4caf50;
+            --bg-light: #e8f5e9;
+            --bg-white: #ffffff;
+            --text-main: #333333;
+            --error-color: #d32f2f;
+            --error-bg: #ffebee;
+            --correct-color: #1b5e20;
+            --correct-bg: #c8e6c9;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f8e9;
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--bg-white);
+            border-radius: 12px;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            border-top: 8px solid var(--primary-medium);
+        }
+
+        header {
+            background-color: var(--primary-medium);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        header .subtitle {
+            margin-top: 5px;
+            font-weight: 300;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .intro {
+            padding: 20px;
+            background-color: var(--bg-light);
+            border-bottom: 1px solid #c8e6c9;
+        }
+
+        /* Aufgaben-Container */
+        .task-container {
+            padding: 25px 20px;
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        .task-container:last-child {
+            border-bottom: none;
+        }
+
+        .task-number {
+            font-weight: bold;
+            color: var(--primary-dark);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Der Fehlersatz */
+        .sentence-box {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .error-highlight {
+            color: var(--error-color);
+            text-decoration: underline wavy var(--error-color);
+            font-weight: bold;
+            cursor: help;
+        }
+
+        .translation {
+            color: #666;
+            font-style: italic;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        /* Auswahl-Buttons (Optionen) */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .option-btn {
+            background-color: white;
+            border: 2px solid #ccc;
+            border-radius: var(--border-radius);
+            padding: 12px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-main);
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-light);
+            background-color: var(--bg-light);
+        }
+
+        .option-btn.selected {
+            border-color: var(--primary-medium);
+            background-color: var(--primary-medium);
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Visuelles Feedback auf den Optionen (nach Prüfung) */
+        .option-btn.mark-correct {
+            background-color: var(--primary-medium) !important;
+            border-color: var(--primary-dark) !important;
+            color: white !important;
+        }
+
+        .option-btn.mark-wrong {
+            background-color: var(--error-color) !important;
+            border-color: #b71c1c !important;
+            color: white !important;
+            opacity: 0.6;
+        }
+
+        /* Feedback Text Box */
+        .feedback-msg {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: none; /* Versteckt bis zur Interaktion */
+            font-size: 0.95rem;
+        }
+
+        .feedback-success {
+            background-color: var(--correct-bg);
+            color: var(--correct-color);
+            border-left: 5px solid var(--primary-medium);
+            display: block;
+        }
+
+        .feedback-error {
+            background-color: var(--error-bg);
+            color: var(--error-color);
+            border-left: 5px solid var(--error-color);
+            display: block;
+        }
+
+        /* Steuerungs-Buttons */
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .ctrl-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
+            min-width: 120px;
+        }
+
+        .ctrl-btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-check {
+            background-color: var(--primary-dark);
+            color: white;
+        }
+
+        .btn-reset {
+            background-color: #78909c; /* Grau-Blau */
+            color: white;
+        }
+
+        .btn-solve {
+            background-color: #0277bd; /* Blau */
+            color: white;
+        }
+
+        /* Mobile Anpassung */
+        @media (max-width: 600px) {
+            .options-grid {
+                grid-template-columns: 1fr; /* Untereinander auf Handy */
+            }
+            .controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Der Fehlerteufel</h1>
+        <div class="subtitle">Thema: Die Präposition ДЛЯ + Genitiv</div>
+    </header>
+
+    <div class="intro">
+        <p><strong>Aufgabe:</strong> In den folgenden Sätzen hat sich jeweils ein Fehler eingeschlichen. Das Wort nach der Präposition <strong>для</strong> steht im falschen Fall. Finden Sie die richtige Korrektur!</p>
+    </div>
+
+    <!-- AUFGABE 1: Maskulinum -->
+    <div class="task-container" id="task1">
+        <span class="task-number">Aufgabe 1 von 6</span>
+        <div class="sentence-box">
+            Это подарок для <span class="error-highlight">брат</span>.
+        </div>
+        <span class="translation">(Das ist ein Geschenk für den Bruder.)</span>
+        
+        <div class="options-grid">
+            <!-- value=true markiert die richtige Antwort -->
+            <button class="option-btn" onclick="selectOption(1, this, false)">брат</button>
+            <button class="option-btn" onclick="selectOption(1, this, true)">брата</button>
+            <button class="option-btn" onclick="selectOption(1, this, false)">брату</button>
+        </div>
+
+        <div class="feedback-msg" id="feedback-1"></div>
+
+        <div class="controls">
+            <button class="ctrl-btn btn-check" onclick="checkTask(1, '<strong>Richtig!</strong> Maskuline Nomen erhalten im Genitiv die Endung <strong>-а</strong> (брат -> брата).')">Überprüfen</button>
+            <button class="ctrl-btn btn-reset" onclick="resetTask(1)">Zurücksetzen</button>
+            <button class="ctrl-btn btn-solve" onclick="showSolution(1, '<strong>Lösung:</strong> Maskuline Nomen erhalten im Genitiv die Endung <strong>-а</strong> (брат -> брата).')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 2: Femininum auf -a -->
+    <div class="task-container" id="task2">
+        <span class="task-number">Aufgabe 2 von 6</span>
+        <div class="sentence-box">
+            Вот цветы для <span class="error-highlight">мама</span>.
+        </div>
+        <span class="translation">(Hier sind Blumen für Mama.)</span>
+        
+        <div class="options-grid">
+            <button class="option-btn" onclick="selectOption(2, this, false)">маме</button>
+            <button class="option-btn" onclick="selectOption(2, this, false)">маму</button>
+            <button class="option-btn" onclick="selectOption(2, this, true)">мамы</button>
+        </div>
+
+        <div class="feedback-msg" id="feedback-2"></div>
+
+        <div class="controls">
+            <button class="ctrl-btn btn-check" onclick="checkTask(2, '<strong>Richtig!</strong> Feminine Nomen auf -а erhalten im Genitiv die Endung <strong>-ы</strong> (мама -> мамы).')">Überprüfen</button>
+            <button class="ctrl-btn btn-reset" onclick="resetTask(2)">Zurücksetzen</button>
+            <button class="ctrl-btn btn-solve" onclick="showSolution(2, '<strong>Lösung:</strong> Feminine Nomen auf -а erhalten im Genitiv die Endung <strong>-ы</strong> (мама -> мамы).')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 3: Personalpronomen (Ich) -->
+    <div class="task-container" id="task3">
+        <span class="task-number">Aufgabe 3 von 6</span>
+        <div class="sentence-box">
+            Это письмо не для <span class="error-highlight">я</span>.
+        </div>
+        <span class="translation">(Dieser Brief ist nicht für mich.)</span>
+        
+        <div class="options-grid">
+            <button class="option-btn" onclick="selectOption(3, this, true)">меня</button>
+            <button class="option-btn" onclick="selectOption(3, this, false)">мне</button>
+            <button class="option-btn" onclick="selectOption(3, this, false)">мной</button>
+        </div>
+
+        <div class="feedback-msg" id="feedback-3"></div>
+
+        <div class="controls">
+            <button class="ctrl-btn btn-check" onclick="checkTask(3, '<strong>Richtig!</strong> Das Personalpronomen \'я\' (ich) heißt im Genitiv <strong>меня</strong>.')">Überprüfen</button>
+            <button class="ctrl-btn btn-reset" onclick="resetTask(3)">Zurücksetzen</button>
+            <button class="ctrl-btn btn-solve" onclick="showSolution(3, '<strong>Lösung:</strong> Das Personalpronomen \'я\' (ich) heißt im Genitiv <strong>меня</strong>.')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 4: Personalpronomen 3. Pers (das N) -->
+    <div class="task-container" id="task4">
+        <span class="task-number">Aufgabe 4 von 6</span>
+        <div class="sentence-box">
+            Я сделал это для <span class="error-highlight">его</span>.
+        </div>
+        <span class="translation">(Ich habe das für ihn gemacht.)</span>
+        
+        <div class="options-grid">
+            <button class="option-btn" onclick="selectOption(4, this, false)">его</button>
+            <button class="option-btn" onclick="selectOption(4, this, true)">него</button>
+            <button class="option-btn" onclick="selectOption(4, this, false)">ему</button>
+        </div>
+
+        <div class="feedback-msg" id="feedback-4"></div>
+
+        <div class="controls">
+            <button class="ctrl-btn btn-check" onclick="checkTask(4, '<strong>Sehr gut!</strong> Nach einer Präposition bekommen Pronomen der 3. Person (он/она/они) ein <strong>н</strong> am Anfang (его -> него).')">Überprüfen</button>
+            <button class="ctrl-btn btn-reset" onclick="resetTask(4)">Zurücksetzen</button>
+            <button class="ctrl-btn btn-solve" onclick="showSolution(4, '<strong>Lösung:</strong> Nach einer Präposition bekommen Pronomen der 3. Person (он/она/они) ein <strong>н</strong> am Anfang (его -> него).')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 5: Femininum auf -ь -->
+    <div class="task-container" id="task5">
+        <span class="task-number">Aufgabe 5 von 6</span>
+        <div class="sentence-box">
+            Мы купили игрушку для <span class="error-highlight">дочь</span>.
+        </div>
+        <span class="translation">(Wir haben ein Spielzeug für die Tochter gekauft.)</span>
+        
+        <div class="options-grid">
+            <button class="option-btn" onclick="selectOption(5, this, false)">дочи</button>
+            <button class="option-btn" onclick="selectOption(5, this, true)">дочери</button>
+            <button class="option-btn" onclick="selectOption(5, this, false)">доче</button>
+        </div>
+
+        <div class="feedback-msg" id="feedback-5"></div>
+
+        <div class="controls">
+            <button class="ctrl-btn btn-check" onclick="checkTask(5, '<strong>Richtig!</strong> Feminine Nomen, die auf ein Weichheitszeichen (-ь) enden, haben im Genitiv die Endung <strong>-и</strong>.')">Überprüfen</button>
+            <button class="ctrl-btn btn-reset" onclick="resetTask(5)">Zurücksetzen</button>
+            <button class="ctrl-btn btn-solve" onclick="showSolution(5, '<strong>Lösung:</strong> Feminine Nomen, die auf ein Weichheitszeichen (-ь) enden, haben im Genitiv die Endung <strong>-и</strong>.')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 6: Adjektiv -->
+    <div class="task-container" id="task6">
+        <span class="task-number">Aufgabe 6 von 6</span>
+        <div class="sentence-box">
+            Это учебник для <span class="error-highlight">русский</span> студента.
+        </div>
+        <span class="translation">(Das ist ein Lehrbuch für den russischen Studenten.)</span>
+        
+        <div class="options-grid">
+            <button class="option-btn" onclick="selectOption(6, this, false)">русский</button>
+            <button class="option-btn" onclick="selectOption(6, this, false)">русскому</button>
+            <button class="option-btn" onclick="selectOption(6, this, true)">русского</button>
+        </div>
+
+        <div class="feedback-msg" id="feedback-6"></div>
+
+        <div class="controls">
+            <button class="ctrl-btn btn-check" onclick="checkTask(6, '<strong>Korrekt!</strong> Auch Adjektive müssen in den Genitiv. Maskuline Adjektive enden dann auf <strong>-ого</strong>.')">Überprüfen</button>
+            <button class="ctrl-btn btn-reset" onclick="resetTask(6)">Zurücksetzen</button>
+            <button class="ctrl-btn btn-solve" onclick="showSolution(6, '<strong>Lösung:</strong> Auch Adjektive müssen in den Genitiv. Maskuline Adjektive enden dann auf <strong>-ого</strong>.')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    /**
+     * Wählt eine Option aus (Visuelles Feedback vor der Prüfung)
+     * @param {number} taskNum - Nummer der Aufgabe
+     * @param {HTMLElement} btnElement - Der geklickte Button
+     * @param {boolean} isCorrect - Ist dies die richtige Antwort? (wird im DOM gespeichert)
+     */
+    function selectOption(taskNum, btnElement, isCorrect) {
+        const taskContainer = document.getElementById('task' + taskNum);
+        const allOptions = taskContainer.querySelectorAll('.option-btn');
+        const feedback = document.getElementById('feedback-' + taskNum);
+
+        // Reset previous visual states
+        allOptions.forEach(btn => {
+            btn.classList.remove('selected');
+            // Wir entfernen noch nicht die Rot/Grün Markierung, falls der User korrigieren will,
+            // aber wir verstecken das Feedback, damit klar ist, dass neu geprüft werden muss.
+        });
+        
+        // Feedback ausblenden bei neuer Auswahl
+        feedback.style.display = 'none';
+        feedback.className = 'feedback-msg';
+
+        // Neue Auswahl markieren
+        btnElement.classList.add('selected');
+        // Wir speichern das Ergebnis im Dataset des Containers, um es später zu prüfen
+        taskContainer.setAttribute('data-selected-correct', isCorrect);
+        taskContainer.setAttribute('data-has-selection', 'true');
+    }
+
+    /**
+     * Prüft die aktuelle Auswahl
+     * @param {number} taskNum 
+     * @param {string} explanationText - Text für die richtige Antwort
+     */
+    function checkTask(taskNum, explanationText) {
+        const taskContainer = document.getElementById('task' + taskNum);
+        const feedback = document.getElementById('feedback-' + taskNum);
+        const hasSelection = taskContainer.getAttribute('data-has-selection') === 'true';
+        const isCorrect = taskContainer.getAttribute('data-selected-correct') === 'true';
+        const selectedBtn = taskContainer.querySelector('.option-btn.selected');
+
+        if (!hasSelection) {
+            feedback.innerHTML = "Bitte wählen Sie zuerst einen Korrekturvorschlag aus.";
+            feedback.className = 'feedback-msg feedback-error';
+            feedback.style.display = 'block';
+            return;
+        }
+
+        if (isCorrect) {
+            feedback.innerHTML = explanationText;
+            feedback.className = 'feedback-msg feedback-success';
+            if(selectedBtn) selectedBtn.classList.add('mark-correct');
+        } else {
+            feedback.innerHTML = "<strong>Leider falsch.</strong> Das ist nicht die richtige Genitiv-Form für dieses Wort.";
+            feedback.className = 'feedback-msg feedback-error';
+            if(selectedBtn) selectedBtn.classList.add('mark-wrong');
+        }
+        feedback.style.display = 'block';
+    }
+
+    /**
+     * Setzt die Aufgabe zurück
+     * @param {number} taskNum 
+     */
+    function resetTask(taskNum) {
+        const taskContainer = document.getElementById('task' + taskNum);
+        const allOptions = taskContainer.querySelectorAll('.option-btn');
+        const feedback = document.getElementById('feedback-' + taskNum);
+
+        allOptions.forEach(btn => {
+            btn.classList.remove('selected', 'mark-correct', 'mark-wrong');
+        });
+
+        taskContainer.removeAttribute('data-selected-correct');
+        taskContainer.removeAttribute('data-has-selection');
+
+        feedback.style.display = 'none';
+        feedback.innerHTML = '';
+    }
+
+    /**
+     * Zeigt die Lösung direkt an
+     * @param {number} taskNum 
+     * @param {string} solutionText 
+     */
+    function showSolution(taskNum, solutionText) {
+        const taskContainer = document.getElementById('task' + taskNum);
+        const allOptions = taskContainer.querySelectorAll('.option-btn');
+        const feedback = document.getElementById('feedback-' + taskNum);
+
+        // Reset visuals first
+        allOptions.forEach(btn => {
+            btn.classList.remove('selected', 'mark-correct', 'mark-wrong');
+            // Find correct one logic based on onclick attribute text content analysis 
+            // is tricky without cleaner markup, so we rely on the click handler args
+            // However, simply iterating the onclick string is hacky.
+            // Better: trigger the click on the correct element programmatically or check logic.
+            // Let's use the property of the button we set in HTML.
+            
+            // Da wir selectOption(..., true) im HTML haben, können wir prüfen:
+            if (btn.getAttribute('onclick').includes('true')) {
+                btn.classList.add('mark-correct');
+                btn.classList.add('selected'); // Optional: auch als "ausgewählt" markieren
+            }
+        });
+
+        feedback.innerHTML = solutionText;
+        feedback.className = 'feedback-msg feedback-success';
+        feedback.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
