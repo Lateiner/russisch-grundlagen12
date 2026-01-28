@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russische Grammatik: Präposition ДЛЯ</title>
+    <!-- Drag & Drop Touch Polyfill -->
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #3f51b5;
+            --secondary-color: #e8eaf6;
+            --success-color: #4caf50;
+            --error-color: #f44336;
+            --text-color: #333;
+            --border-radius: 8px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+        }
+
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 20px;
+        }
+
+        /* Introduction Box */
+        .intro-box {
+            background-color: var(--secondary-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            border-left: 5px solid var(--primary-color);
+            margin-bottom: 30px;
+        }
+
+        .rule-highlight {
+            font-weight: bold;
+            color: #d32f2f;
+        }
+
+        .russian-text {
+            font-family: 'Arial', sans-serif;
+            font-size: 1.1em;
+        }
+
+        /* Exercise Styles */
+        .exercise {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+        }
+
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .task-number {
+            background: var(--primary-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        /* Inputs & Interactive Elements */
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+            margin: 0 5px;
+        }
+
+        select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+            margin: 0 5px;
+            background: white;
+        }
+
+        input.correct, select.correct {
+            border-color: var(--success-color);
+            background-color: #e8f5e9;
+        }
+
+        input.wrong, select.wrong {
+            border-color: var(--error-color);
+            background-color: #ffebee;
+        }
+
+        .radio-group label {
+            display: block;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+
+        /* Drag and Drop Styles */
+        .draggable-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #fafafa;
+            border-radius: 4px;
+        }
+
+        .draggable {
+            background: white;
+            border: 1px solid var(--primary-color);
+            padding: 8px 15px;
+            cursor: grab;
+            border-radius: 4px;
+            user-select: none;
+        }
+
+        .dropzone-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .dropzone-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dropzone {
+            min-width: 150px;
+            min-height: 40px;
+            border: 2px dashed #ccc;
+            background: #f9f9f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+
+        .dropzone.highlight {
+            border-color: var(--primary-color);
+            background: var(--secondary-color);
+        }
+
+        /* Word Order Styles */
+        .word-bank, .sentence-line {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            min-height: 60px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .sentence-line {
+            background-color: #fafafa;
+        }
+
+        .word-chip {
+            background: var(--secondary-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            border: 1px solid var(--primary-color);
+            font-weight: 500;
+            user-select: none;
+        }
+        
+        .word-chip:hover {
+            background: #dce0f5;
+        }
+
+        /* Control Buttons */
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .btn-check { background-color: var(--success-color); color: white; }
+        .btn-reset { background-color: #9e9e9e; color: white; }
+        .btn-solve { background-color: var(--primary-color); color: white; }
+
+        .feedback-msg {
+            margin-left: 10px;
+            font-weight: bold;
+            align-self: center;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .controls { flex-direction: column; }
+            button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russisch A1-A2: Die Präposition ДЛЯ</h1>
+
+    <div class="intro-box">
+        <h2>Einführung</h2>
+        <p>Die russische Präposition <strong>ДЛЯ</strong> bedeutet auf Deutsch meistens <em>„für“</em>.</p>
+        <p><strong>WICHTIG:</strong> Nach der Präposition ДЛЯ steht das Nomen oder Pronomen immer im <span class="rule-highlight">GENITIV</span> (Родительный падеж).</p>
+        
+        <h3>Verwendung:</h3>
+        <ul>
+            <li><strong>Bestimmung / Empfänger (Für wen?):</strong><br>
+                <span class="russian-text">Это подарок для мамы.</span> (Das ist ein Geschenk für Mama.)<br>
+                <em>Mama (мама) ➝ Genitiv: мамы</em>
+            </li>
+            <li><strong>Zweck (Wofür?):</strong><br>
+                <span class="russian-text">Это вода для супа.</span> (Das ist Wasser für die Suppe.)<br>
+                <em>Suppe (суп) ➝ Genitiv: супа</em>
+            </li>
+        </ul>
+        
+        <h3>Kurze Wiederholung der Genitiv-Endungen (Singular):</h3>
+        <ul>
+            <li>Maskulin (Konsonant) ➝ <strong>+а</strong> (брат ➝ брата)</li>
+            <li>Feminin (-а) ➝ <strong>-ы</strong> (мама ➝ мамы)</li>
+            <li>Feminin (-я / -ь) ➝ <strong>-и</strong> (Россия ➝ России)</li>
+        </ul>
+    </div>
+
+    <!-- TASK 1 -->
+    <div class="exercise" id="task1">
+        <div class="exercise-header"><div class="task-number">1</div><h3>Welchen Fall benötigt die Präposition ДЛЯ?</h3></div>
+        <div class="radio-group">
+            <label><input type="radio" name="t1" value="nominativ"> Nominativ (1. Fall)</label>
+            <label><input type="radio" name="t1" value="genitiv"> Genitiv (2. Fall)</label>
+            <label><input type="radio" name="t1" value="akkusativ"> Akkusativ (4. Fall)</label>
+        </div>
+        <div class="controls">
+            <button class="btn-check" onclick="checkRadio('task1', 'genitiv')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetRadio('task1')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveRadio('task1', 'genitiv')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- TASK 2 -->
+    <div class="exercise" id="task2">
+        <div class="exercise-header"><div class="task-number">2</div><h3>Ergänzen Sie die Personalpronomen im Genitiv.</h3></div>
+        <div class="russian-text">
+            <ol>
+                <li>Это для (я) <input type="text" data-ans="меня">.</li>
+                <li>Это подарок для (ты) <input type="text" data-ans="тебя">.</li>
+                <li>Вот книга для (он) <input type="text" data-ans="него">.</li>
+                <li>Цветы для (она) <input type="text" data-ans="неё">.</li>
+            </ol>
+        </div>
+        <div class="controls">
+            <button class="btn-check" onclick="checkInputs('task2')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetInputs('task2')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveInputs('task2')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- TASK 3 -->
+    <div class="exercise" id="task3">
+        <div class="exercise-header"><div class="task-number">3</div><h3>Maskuline Nomen: Ergänzen Sie die Endung.</h3></div>
+        <div class="russian-text">
+            <ol>
+                <li>Это суп для (Антон) Антон<input type="text" data-ans="а" style="width: 30px">.</li>
+                <li>Это место для (брат) брат<input type="text" data-ans="а" style="width: 30px">.</li>
+                <li>Чай для (студент) студент<input type="text" data-ans="а" style="width: 30px">.</li>
+            </ol>
+        </div>
+        <div class="controls">
+            <button class="btn-check" onclick="checkInputs('task3')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetInputs('task3')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveInputs('task3')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- TASK 4 -->
+    <div class="exercise" id="task4">
+        <div class="exercise-header"><div class="task-number">4</div><h3>Feminine Nomen: Ergänzen Sie die Endung.</h3></div>
+        <div class="russian-text">
+            <ol>
+                <li>Это подарок для (Анна) Анн<input type="text" data-ans="ы" style="width: 30px">.</li>
+                <li>Вода для (мама) мам<input type="text" data-ans="ы" style="width: 30px">.</li>
+                <li>Книга для (сестра) сестр<input type="text" data-ans="ы" style="width: 30px">.</li>
+            </ol>
+        </div>
+        <div class="controls">
+            <button class="btn-check" onclick="checkInputs('task4')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetInputs('task4')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveInputs('task4')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- TASK 5 -->
+    <div class="exercise" id="task5">
+        <div class="exercise-header"><div class="task-number">5</div><h3>Was passt zusammen? Ziehen Sie den Gegenstand zum Zweck.</h3></div>
+        <div class="draggable-container">
+            <div class="draggable" draggable="true" id="d5-1" data-match="t5-1">Ваза (Vase)</div>
+            <div class="draggable" draggable="true" id="d5-2" data-match="t5-2">Гараж (Garage)</div>
+            <div class="draggable" draggable="true" id="d5-3" data-match="t5-3">Учебник (Lehrbuch)</div>
+        </div>
+        <div class="dropzone-container russian-text">
+            <div class="dropzone-row"><span>... для цветов (Blumen)</span><div class="dropzone" id="t5-1"></div></div>
+            <div class="dropzone-row"><span>... для машины (Auto)</span><div class="dropzone" id="t5-2"></div></div>
+            <div class="dropzone-row"><span>... для студента (Student)</span><div class="dropzone" id="t5-3"></div></div>
+        </div>
+        <div class="controls">
+            <button class="btn-check" onclick="checkDragDrop('task5')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetDragDrop('task5')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveDragDrop('task5')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- TASK 6: KORRIGIERT -->
+    <div class="exercise" id="task6">
+        <div class="exercise-header">
+            <div class="task-number">6</div>
+            <h3>Wählen Sie die richtige Präposition: ДЛЯ oder НА?</h3>
+        </div>
+        <p><em>Hinweis: Achten Sie auf den Fall!</em><br>
+           - <strong>На</strong> + Akkusativ (für einen Anlass/Zeitpunkt)<br>
+           - <strong>Для</strong> + Genitiv (für eine Person/Empfänger)
+        </p>
+        <div class="russian-text">
+            <p>1. Я купил торт <select data-ans="на">
+                <option value="">...</option>
+                <option value="для">для</option>
+                <option value="на">на</option>
+            </select> день рождения. <small>(Akkusativ: Geburtstag)</small></p>
+            
+            <p>2. Я купил торт <select data-ans="для">
+                <option value="">...</option>
+                <option value="для">для</option>
+                <option value="на">на</option>
+            </select> бабушки. <small>(Genitiv: Oma)</small></p>
+        </div>
+        <div class="controls">
+            <button class="btn-check" onclick="checkSelects('task6')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetSelects('task6')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveSelects('task6')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- TASK 7: KORRIGIERT -->
+    <div class="exercise" id="task7">
+        <div class="exercise-header">
+            <div class="task-number">7</div>
+            <h3>Satzbau: Klicken Sie auf die Wörter in der richtigen Reihenfolge.</h3>
+        </div>
+        <p>Satz: <strong>"Das ist ein Geschenk für Viktor."</strong></p>
+        <div class="word-bank" id="bank7">
+            <span class="word-chip" onclick="moveWord(this, 'line7')">Виктора</span>
+            <span class="word-chip" onclick="moveWord(this, 'line7')">Это</span>
+            <span class="word-chip" onclick="moveWord(this, 'line7')">для</span>
+            <span class="word-chip" onclick="moveWord(this, 'line7')">подарок</span>
+        </div>
+        <!-- Zielbereich -->
+        <div class="sentence-line russian-text" id="line7"></div>
+        
+        <div class="controls">
+            <button class="btn-check" onclick="checkOrder('task7', 'Это подарок для Виктора')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetOrder('task7', ['Виктора', 'Это', 'для', 'подарок'])">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveOrder('task7', ['Это', 'подарок', 'для', 'Виктора'])">Lösung anzeigen</button>
+            <span class="feedback-msg" id="msg7"></span>
+        </div>
+    </div>
+
+    <!-- TASK 8 -->
+    <div class="exercise" id="task8">
+        <div class="exercise-header"><div class="task-number">8</div><h3>Plural: Setzen Sie die Wörter in den Genitiv Plural.</h3></div>
+        <div class="russian-text">
+            <ol>
+                <li>Это школа для (дети) <input type="text" data-ans="детей">. (Kinder)</li>
+                <li>Это корм для (собаки) <input type="text" data-ans="собак">. (Hunde)</li>
+            </ol>
+        </div>
+        <div class="controls">
+            <button class="btn-check" onclick="checkInputs('task8')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetInputs('task8')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveInputs('task8')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- TASK 9 -->
+    <div class="exercise" id="task9">
+        <div class="exercise-header"><div class="task-number">9</div><h3>Logik: Ist die Aussage sinnvoll? (Richtig/Falsch)</h3></div>
+        <div class="russian-text">
+            <p>1. Бензин для машины. (Benzin für das Auto)</p>
+            <label><input type="radio" name="t9_1" value="true"> Richtig</label>
+            <label><input type="radio" name="t9_1" value="false"> Falsch</label>
+            
+            <p>2. Суп для телефона. (Suppe für das Telefon)</p>
+            <label><input type="radio" name="t9_2" value="false"> Richtig</label>
+            <label><input type="radio" name="t9_2" value="true"> Falsch</label>
+        </div>
+        <div class="controls">
+            <button class="btn-check" onclick="checkMultiRadios('task9', ['true', 'true'])">Überprüfen</button>
+            <button class="btn-reset" onclick="resetMultiRadios('task9')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveMultiRadios('task9', ['true', 'true'])">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- TASK 10 -->
+    <div class="exercise" id="task10">
+        <div class="exercise-header"><div class="task-number">10</div><h3>Übersetzung: Wählen Sie die korrekte Übersetzung.</h3></div>
+        <p>"Ich mache das für dich."</p>
+        <div class="radio-group russian-text">
+            <label><input type="radio" name="t10" value="wrong1"> Я делаю это для ты.</label>
+            <label><input type="radio" name="t10" value="wrong2"> Я делаю это тебя.</label>
+            <label><input type="radio" name="t10" value="correct"> Я делаю это для тебя.</label>
+        </div>
+        <div class="controls">
+            <button class="btn-check" onclick="checkRadio('task10', 'correct')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetRadio('task10')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveRadio('task10', 'correct')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- TASK 11 -->
+    <div class="exercise" id="task11">
+        <div class="exercise-header"><div class="task-number">11</div><h3>Possessivpronomen: Ergänzen Sie die Endung.</h3></div>
+        <div class="russian-text">
+            <ol>
+                <li>Это для мо<strong>его</strong> друг<input type="text" data-ans="а" style="width:30px">. (für meinen Freund)</li>
+                <li>Это для тво<strong>ей</strong> мам<input type="text" data-ans="ы" style="width:30px">. (für deine Mama)</li>
+            </ol>
+        </div>
+        <div class="controls">
+            <button class="btn-check" onclick="checkInputs('task11')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetInputs('task11')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveInputs('task11')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- TASK 12 -->
+    <div class="exercise" id="task12">
+        <div class="exercise-header"><div class="task-number">12</div><h3>Sortieren: Welche Endung bekommt das Wort im Genitiv?</h3></div>
+        <div class="draggable-container">
+            <div class="draggable" draggable="true" id="d12-1" data-category="a">Стол (Tisch)</div>
+            <div class="draggable" draggable="true" id="d12-2" data-category="y">Лампа (Lampe)</div>
+            <div class="draggable" draggable="true" id="d12-3" data-category="a">Брат (Bruder)</div>
+            <div class="draggable" draggable="true" id="d12-4" data-category="y">Сестра (Schwester)</div>
+        </div>
+        <div class="dropzone-container" style="flex-direction: row; justify-content: space-around;">
+            <div style="flex:1; margin-right:10px;">
+                <h4 style="text-align:center;">Endung -а<br>(Maskulin hart)</h4>
+                <div class="dropzone" id="zone-a" style="min-height: 100px; flex-direction:column; padding:10px;"></div>
+            </div>
+            <div style="flex:1;">
+                <h4 style="text-align:center;">Endung -ы<br>(Feminin hart)</h4>
+                <div class="dropzone" id="zone-y" style="min-height: 100px; flex-direction:column; padding:10px;"></div>
+            </div>
+        </div>
+        <div class="controls">
+            <button class="btn-check" onclick="checkCategorization('task12')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetCategorization('task12')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveCategorization('task12')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    /* --- General Utilities --- */
+    function setFeedback(element, isCorrect) {
+        element.classList.remove('correct', 'wrong');
+        element.classList.add(isCorrect ? 'correct' : 'wrong');
+    }
+
+    function clearFeedback(element) {
+        element.classList.remove('correct', 'wrong');
+    }
+
+    /* --- INPUT TASKS (2, 3, 4, 8, 11) --- */
+    function checkInputs(taskId) {
+        const inputs = document.querySelectorAll(`#${taskId} input[type="text"]`);
+        inputs.forEach(input => {
+            const answer = input.getAttribute('data-ans').toLowerCase();
+            const value = input.value.trim().toLowerCase();
+            setFeedback(input, value === answer);
+        });
+    }
+
+    function resetInputs(taskId) {
+        const inputs = document.querySelectorAll(`#${taskId} input[type="text"]`);
+        inputs.forEach(input => {
+            input.value = '';
+            clearFeedback(input);
+        });
+    }
+
+    function solveInputs(taskId) {
+        const inputs = document.querySelectorAll(`#${taskId} input[type="text"]`);
+        inputs.forEach(input => {
+            input.value = input.getAttribute('data-ans');
+            clearFeedback(input);
+        });
+    }
+
+    /* --- RADIO TASKS (1, 10) --- */
+    function checkRadio(taskId, correctVal) {
+        const radios = document.getElementsByName(taskId === 'task1' ? 't1' : 't10');
+        let selected = null;
+        let parent = document.getElementById(taskId);
+        parent.querySelectorAll('label').forEach(l => l.style.color = 'inherit');
+        for(let r of radios) { if(r.checked) selected = r; }
+        if(selected) {
+            const isCorrect = selected.value === correctVal;
+            selected.parentElement.style.color = isCorrect ? 'green' : 'red';
+            selected.parentElement.style.fontWeight = isCorrect ? 'bold' : 'normal';
+        }
+    }
+
+    function resetRadio(taskId) {
+        const radios = document.getElementsByName(taskId === 'task1' ? 't1' : 't10');
+        radios.forEach(r => r.checked = false);
+        document.getElementById(taskId).querySelectorAll('label').forEach(l => {
+            l.style.color = 'inherit';
+            l.style.fontWeight = 'normal';
+        });
+    }
+
+    function solveRadio(taskId, correctVal) {
+        resetRadio(taskId);
+        const radios = document.getElementsByName(taskId === 'task1' ? 't1' : 't10');
+        radios.forEach(r => {
+            if(r.value === correctVal) {
+                r.checked = true;
+                r.parentElement.style.color = 'green';
+                r.parentElement.style.fontWeight = 'bold';
+            }
+        });
+    }
+
+    /* --- SELECT TASKS (6) --- */
+    function checkSelects(taskId) {
+        const selects = document.querySelectorAll(`#${taskId} select`);
+        selects.forEach(sel => {
+            const ans = sel.getAttribute('data-ans');
+            setFeedback(sel, sel.value === ans);
+        });
+    }
+
+    function resetSelects(taskId) {
+        const selects = document.querySelectorAll(`#${taskId} select`);
+        selects.forEach(sel => {
+            sel.value = "";
+            clearFeedback(sel);
+        });
+    }
+
+    function solveSelects(taskId) {
+        const selects = document.querySelectorAll(`#${taskId} select`);
+        selects.forEach(sel => {
+            sel.value = sel.getAttribute('data-ans');
+            clearFeedback(sel);
+        });
+    }
+
+    /* --- MULTI RADIO TASKS (9) --- */
+    function checkMultiRadios(taskId, answers) {
+        const q1 = document.getElementsByName('t9_1');
+        let sel1 = [...q1].find(r => r.checked);
+        if(sel1) sel1.parentElement.style.color = sel1.value === answers[0] ? 'green' : 'red';
+
+        const q2 = document.getElementsByName('t9_2');
+        let sel2 = [...q2].find(r => r.checked);
+        if(sel2) sel2.parentElement.style.color = sel2.value === answers[1] ? 'green' : 'red';
+    }
+
+    function resetMultiRadios(taskId) {
+        const inputs = document.querySelectorAll(`#${taskId} input[type="radio"]`);
+        inputs.forEach(i => {
+            i.checked = false;
+            i.parentElement.style.color = 'inherit';
+        });
+    }
+
+    function solveMultiRadios(taskId, answers) {
+        resetMultiRadios(taskId);
+        const q1 = document.getElementsByName('t9_1');
+        [...q1].forEach(r => { if(r.value === answers[0]) { r.checked = true; r.parentElement.style.color='green'; }});
+        const q2 = document.getElementsByName('t9_2');
+        [...q2].forEach(r => { if(r.value === answers[1]) { r.checked = true; r.parentElement.style.color='green'; }});
+    }
+
+    /* --- DRAG AND DROP LOGIC (Task 5 & 12) --- */
+    let draggedItem = null;
+    document.querySelectorAll('.draggable').forEach(item => {
+        item.addEventListener('dragstart', function(e) {
+            draggedItem = this;
+            e.dataTransfer.effectAllowed = 'move';
+            this.style.opacity = '0.5';
+        });
+        item.addEventListener('dragend', function() {
+            this.style.opacity = '1';
+            draggedItem = null;
+        });
+    });
+
+    document.querySelectorAll('.dropzone').forEach(zone => {
+        zone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            this.classList.add('highlight');
+        });
+        zone.addEventListener('dragleave', function() { this.classList.remove('highlight'); });
+        zone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('highlight');
+            if(draggedItem) this.appendChild(draggedItem);
+        });
+    });
+
+    function checkDragDrop(taskId) {
+        const container = document.getElementById(taskId);
+        const dropzones = container.querySelectorAll('.dropzone');
+        dropzones.forEach(zone => {
+            const item = zone.querySelector('.draggable');
+            if(item) {
+                if(item.getAttribute('data-match') === zone.id) {
+                    item.style.backgroundColor = '#e8f5e9'; item.style.borderColor = 'green';
+                } else {
+                    item.style.backgroundColor = '#ffebee'; item.style.borderColor = 'red';
+                }
+            }
+        });
+    }
+
+    function resetDragDrop(taskId) {
+        const container = document.getElementById(taskId);
+        const origin = container.querySelector('.draggable-container');
+        const items = container.querySelectorAll('.draggable');
+        const sorted = [...items].sort((a,b) => a.id.localeCompare(b.id));
+        sorted.forEach(item => {
+            item.style.backgroundColor = 'white';
+            item.style.borderColor = '#3f51b5';
+            origin.appendChild(item);
+        });
+    }
+
+    function solveDragDrop(taskId) {
+        const container = document.getElementById(taskId);
+        const items = container.querySelectorAll('.draggable');
+        items.forEach(item => {
+            const targetId = item.getAttribute('data-match');
+            const targetZone = document.getElementById(targetId);
+            item.style.backgroundColor = 'white'; item.style.borderColor = '#3f51b5';
+            if(targetZone) targetZone.appendChild(item);
+        });
+    }
+
+    function checkCategorization(taskId) {
+        const container = document.getElementById(taskId);
+        const zones = container.querySelectorAll('.dropzone');
+        zones.forEach(zone => {
+            const requiredCat = zone.id === 'zone-a' ? 'a' : 'y';
+            const items = zone.querySelectorAll('.draggable');
+            items.forEach(item => {
+                if(item.getAttribute('data-category') === requiredCat) {
+                    item.style.borderColor = 'green'; item.style.backgroundColor = '#e8f5e9';
+                } else {
+                    item.style.borderColor = 'red'; item.style.backgroundColor = '#ffebee';
+                }
+            });
+        });
+    }
+
+    function resetCategorization(taskId) { resetDragDrop(taskId); }
+    
+    function solveCategorization(taskId) {
+        const items = document.querySelectorAll(`#${taskId} .draggable`);
+        items.forEach(item => {
+            const cat = item.getAttribute('data-category');
+            const target = document.getElementById(cat === 'a' ? 'zone-a' : 'zone-y');
+            item.style.borderColor = '#3f51b5'; item.style.backgroundColor = 'white';
+            target.appendChild(item);
+        });
+    }
+
+    /* --- SENTENCE SCRAMBLE (Task 7) --- */
+    function moveWord(chip, targetId) {
+        const target = document.getElementById(targetId);
+        const bank = document.getElementById('bank7');
+        if(chip.parentElement.id === 'bank7') { target.appendChild(chip); } 
+        else { bank.appendChild(chip); }
+    }
+
+    function checkOrder(taskId, correctStr) {
+        const line = document.getElementById('line7');
+        const words = [...line.querySelectorAll('.word-chip')].map(c => c.innerText.trim());
+        const attempt = words.join(' ');
+        const msg = document.getElementById('msg7');
+
+        if(attempt === correctStr) {
+            line.style.border = "2px solid green";
+            line.style.backgroundColor = "#e8f5e9";
+            msg.innerText = "Richtig!";
+            msg.style.color = "green";
+        } else {
+            line.style.border = "2px solid red";
+            line.style.backgroundColor = "#ffebee";
+            msg.innerText = "Falsch. Versuchen Sie es noch einmal.";
+            msg.style.color = "red";
+        }
+    }
+
+    function resetOrder(taskId, wordList) {
+        const bank = document.getElementById('bank7');
+        const line = document.getElementById('line7');
+        const msg = document.getElementById('msg7');
+        bank.innerHTML = ''; line.innerHTML = '';
+        line.style.border = "1px solid #ccc"; line.style.backgroundColor = "#fafafa";
+        msg.innerText = "";
+        wordList.forEach(w => {
+            let chip = document.createElement('span');
+            chip.className = 'word-chip'; chip.innerText = w;
+            chip.onclick = function() { moveWord(this, 'line7'); };
+            bank.appendChild(chip);
+        });
+    }
+
+    function solveOrder(taskId, solutionArr) {
+        const bank = document.getElementById('bank7');
+        const line = document.getElementById('line7');
+        const msg = document.getElementById('msg7');
+        line.innerHTML = ''; bank.innerHTML = '';
+        line.style.border = "1px solid #ccc"; line.style.backgroundColor = "#fafafa";
+        msg.innerText = "";
+        solutionArr.forEach(w => {
+            let chip = document.createElement('span');
+            chip.className = 'word-chip'; chip.innerText = w;
+            chip.onclick = function() { moveWord(this, 'line7'); };
+            line.appendChild(chip);
+        });
+    }
+
+</script>
+
+</body>
+</html>
